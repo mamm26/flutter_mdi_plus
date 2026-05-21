@@ -1,0 +1,16 @@
+{
+  "name": "flutter_mdi_plus",
+  "version": "1.0.0",
+  "packageManager": "yarn@4.9.2",
+  "main": "index.js",
+  "repository": "https://github.com/mamm26/flutter_mdi_plus.git",
+  "author": "mamm26",
+  "license": "MIT",
+  "scripts": {
+    "build": "node index.js"
+  },
+  "dependencies": {
+    "@mdi/svg": "7.4.47",
+    "@mdi/util": "^0.3.0"
+  }
+}

@@ -1,0 +1,65 @@
+name: Plugin Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-generator:
+    name: Validate Generator
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: corepack yarn install --immutable
+
+      - name: Regenerate Flutter package file
+        run: corepack yarn build
+
+      - name: Verify generated files are committed
+        run: git diff --exit-code
+
+  build-example:
+    name: Compile Flutter Example
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install plugin dependencies
+        working-directory: mdi_plus
+        run: flutter pub get
+
+      - name: Install example dependencies
+        working-directory: mdi_plus/example
+        run: flutter pub get
+
+      - name: Compile Android example
+        working-directory: mdi_plus/example
+        run: flutter build apk --debug
